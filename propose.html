@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"/>
+<title>💕 A question for you…</title>
+<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet"/>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color: transparent; }
+
+:root {
+  --pink:    #FF6B9D;
+  --light:   #FFB3CD;
+  --pale:    #FFF0F5;
+  --deep:    #C2185B;
+  --white:   #FFFFFF;
+  --text:    #5C1A35;
+}
+
+html, body {
+  width:100%; height:100%;
+  overflow:hidden;
+  font-family: 'Nunito', sans-serif;
+  background: linear-gradient(160deg, #FFD6E7 0%, #FFF0F5 40%, #FFD6E7 100%);
+  user-select: none;
+}
+
+/* ─── FLOATING PARTICLES ─── */
+#particles { position:fixed; inset:0; pointer-events:none; z-index:0; overflow:hidden; }
+.particle {
+  position:absolute;
+  top:-60px;
+  animation: drift linear infinite;
+  opacity:0;
+}
+@keyframes drift {
+  0%   { transform: translateY(0) rotate(0deg) scale(1); opacity:0; }
+  10%  { opacity:0.85; }
+  90%  { opacity:0.7; }
+  100% { transform: translateY(110vh) rotate(720deg) scale(0.6); opacity:0; }
+}
+
+/* ─── SCREENS ─── */
+.screen {
+  position: fixed; inset:0;
+  display:flex; flex-direction:column;
+  align-items:center; justify-content:center;
+  z-index:1;
+  padding:20px;
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+.screen.hidden { opacity:0; pointer-events:none; transform: scale(0.95); }
+
+/* ─── PROPOSE SCREEN ─── */
+#proposeScreen {
+  gap:0;
+}
+
+.bear-wrap {
+  position:relative;
+  margin-bottom:8px;
+}
+.bear {
+  font-size: clamp(80px, 18vw, 120px);
+  line-height:1;
+  display:block;
+  animation: bearBounce 2s ease-in-out infinite;
+  filter: drop-shadow(0 8px 24px rgba(194,24,91,0.2));
+}
+@keyframes bearBounce {
+  0%,100% { transform: translateY(0) rotate(-3deg); }
+  50%      { transform: translateY(-12px) rotate(3deg); }
+}
+.hearts-around {
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+}
+.ha {
+  position:absolute;
+  font-size:1.3rem;
+  animation: orbit 3s linear infinite;
+}
+.ha:nth-child(1) { animation-delay:0s; top:0; left:50%; }
+.ha:nth-child(2) { animation-delay:-1s; top:50%; right:0; }
+.ha:nth-child(3) { animation-delay:-2s; bottom:0; left:50%; }
+@keyframes orbit {
+  0%   { transform: rotate(0deg) translateX(55px) rotate(0deg); opacity:1; }
+  100% { transform: rotate(360deg) translateX(55px) rotate(-360deg); opacity:1; }
+}
+
+.question-text {
+  font-family: 'Great Vibes', cursive;
+  font-size: clamp(2.4rem, 9vw, 4rem);
+  color: var(--text);
+  text-align:center;
+  line-height:1.2;
+  margin-bottom:6px;
+  text-shadow: 0 2px 12px rgba(194,24,91,0.15);
+}
+.sub-text {
+  font-size: clamp(0.78rem, 3vw, 0.92rem);
+  color: #D8608A;
+  text-align:center;
+  margin-bottom: 28px;
+  font-weight:600;
+  letter-spacing:0.04em;
+}
+
+/* ─── BUTTONS ─── */
+.btn-yes {
+  display:block;
+  background: linear-gradient(135deg, #FF6B9D, #C2185B);
+  color:#fff;
+  font-family:'Nunito',sans-serif;
+  font-size: clamp(1rem,4vw,1.2rem);
+  font-weight:800;
+  padding: 16px 52px;
+  border-radius: 50px;
+  border:none;
+  cursor:pointer;
+  box-shadow: 0 6px 28px rgba(194,24,91,0.4), 0 2px 8px rgba(194,24,91,0.2);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  letter-spacing:0.03em;
+  margin-bottom: 14px;
+  position:relative;
+  z-index:2;
+}
+.btn-yes:active { transform:scale(0.96); }
+.btn-yes:hover  { transform:scale(1.07); box-shadow:0 10px 34px rgba(194,24,91,0.45); }
+
+.btn-no {
+  background:#fff;
+  color: var(--deep);
+  font-family:'Nunito',sans-serif;
+  font-size: clamp(0.9rem,3.5vw,1.05rem);
+  font-weight:700;
+  padding: 13px 40px;
+  border-radius: 50px;
+  border: 2px solid var(--light);
+  cursor:pointer;
+  position:fixed; /* flies freely */
+  z-index:999;
+  white-space:nowrap;
+  box-shadow: 0 3px 14px rgba(194,24,91,0.12);
+  letter-spacing:0.02em;
+}
+
+/* ─── YES SCREEN ─── */
+#yesScreen {
+  background: linear-gradient(160deg, #FFD6E7 0%, #FFF0F5 50%, #FFD6E7 100%);
+  gap:12px;
+}
+.yes-bear {
+  font-size: clamp(90px, 20vw, 130px);
+  animation: yesJump 0.6s ease-in-out infinite alternate;
+  filter: drop-shadow(0 8px 24px rgba(194,24,91,0.25));
+}
+@keyframes yesJump {
+  0%   { transform: translateY(0) scale(1); }
+  100% { transform: translateY(-18px) scale(1.06); }
+}
+.yes-title {
+  font-family:'Great Vibes', cursive;
+  font-size: clamp(2.5rem, 10vw, 4.5rem);
+  color: var(--text);
+  text-align:center;
+  line-height:1.1;
+}
+.yes-msg {
+  font-size: clamp(0.85rem, 3.2vw, 1rem);
+  color: #C2185B;
+  text-align:center;
+  font-weight:700;
+  max-width:300px;
+}
+.confetti-row {
+  font-size: clamp(1.5rem, 5vw, 2rem);
+  letter-spacing:0.4rem;
+  animation: rowBounce 1s ease-in-out infinite alternate;
+}
+@keyframes rowBounce {
+  0%   { transform:scale(1); }
+  100% { transform:scale(1.08); }
+}
+
+/* ─── SPARKLE on cursor ─── */
+.sparkle {
+  position:fixed;
+  pointer-events:none;
+  z-index:9999;
+  font-size:1rem;
+  animation: sparkleUp 0.7s ease-out forwards;
+}
+@keyframes sparkleUp {
+  0%   { opacity:1; transform:translateY(0) scale(1); }
+  100% { opacity:0; transform:translateY(-50px) scale(0.3); }
+}
+
+/* ─── NO counter toast ─── */
+#noToast {
+  position:fixed;
+  bottom:28px; left:50%;
+  transform:translateX(-50%);
+  background:rgba(255,255,255,0.9);
+  color: var(--deep);
+  font-size:0.85rem;
+  font-weight:700;
+  padding:10px 22px;
+  border-radius:30px;
+  border:1.5px solid var(--light);
+  box-shadow: 0 4px 16px rgba(194,24,91,0.15);
+  opacity:0;
+  transition: opacity 0.3s ease;
+  z-index:1000;
+  pointer-events:none;
+  white-space:nowrap;
+  text-align:center;
+}
+#noToast.show { opacity:1; }
+</style>
+</head>
+<body>
+
+<!-- Particles -->
+<div id="particles"></div>
+
+<!-- ── PROPOSE SCREEN ── -->
+<div class="screen" id="proposeScreen">
+
+  <div class="bear-wrap">
+    <span class="bear" id="mainBear">🐻</span>
+    <div class="hearts-around">
+      <span class="ha">💕</span>
+      <span class="ha">🌸</span>
+      <span class="ha">💗</span>
+    </div>
+  </div>
+
+  <p class="question-text">Will You Be<br>Mine Forever?</p>
+  <p class="sub-text">🌸 &nbsp; Every heartbeat whispers your name &nbsp; 🌸</p>
+
+  <button class="btn-yes" onclick="sayYes()">Yes, forever! 💖</button>
+
+</div>
+
+<!-- The No button lives outside the flow so it can fly freely -->
+<button class="btn-no" id="noBtn"
+  onmouseenter="runAway()"
+  ontouchstart="runAway()"
+  onclick="runAway()">
+  No 🙈
+</button>
+
+<!-- ── YES SCREEN ── -->
+<div class="screen hidden" id="yesScreen">
+  <span class="yes-bear">🐻</span>
+  <div class="confetti-row">🎊 💕 🎉 💗 🎊</div>
+  <p class="yes-title">She said YES! 💖</p>
+  <p class="yes-msg">You two were written in the stars ✨<br>Forever starts today 🌹</p>
+  <div class="confetti-row" style="font-size:1.5rem;">🌸 🌷 🌹 🌺 🌸</div>
+</div>
+
+<!-- Toast -->
+<div id="noToast">😂 Nice try! The "No" is running away!</div>
+
+<script>
+// ── Particles ──
+const SYMBOLS = ['🌸','💮','🌹','💕','💗','🌷','✿','💝','🩷','🌺'];
+const container = document.getElementById('particles');
+for (let i = 0; i < 30; i++) {
+  const el = document.createElement('div');
+  el.className = 'particle';
+  el.textContent = SYMBOLS[Math.floor(Math.random() * SYMBOLS.length)];
+  el.style.cssText = `
+    left:${Math.random()*100}vw;
+    font-size:${0.9 + Math.random()*1.6}rem;
+    animation-duration:${7 + Math.random()*10}s;
+    animation-delay:${-Math.random()*15}s;
+  `;
+  container.appendChild(el);
+}
+
+// ── No Button positioning ──
+const noBtn = document.getElementById('noBtn');
+let noCount = 0;
+let toastTimer;
+
+// Initially place the No button below the Yes button
+function placeInitial() {
+  const pw = window.innerWidth;
+  const ph = window.innerHeight;
+  noBtn.style.left = (pw/2 - noBtn.offsetWidth/2) + 'px';
+  noBtn.style.top  = (ph/2 + 60) + 'px';
+}
+window.addEventListener('load', () => setTimeout(placeInitial, 50));
+window.addEventListener('resize', placeInitial);
+
+const naughtyMsgs = [
+  'No 🙈', 'Nope! 😆', 'Run! 🏃‍♀️', 'Catch me!',
+  'Nice try! 😜', 'Not today!', 'Haha! 💨', 'Never! 😂',
+  'Too slow! 🐇', 'Keep trying…', '🙅‍♀️ Nu-uh!', 'Over here! 👀',
+  '😂 Gotcha!', 'Zzzip! 💨'
+];
+const toastMsgs = [
+  '😂 Nice try! No is shy!',
+  '🙈 It keeps running!',
+  '💨 Too quick for you!',
+  '🌸 Just say Yes!',
+  '😆 It\'s not clickable!',
+  '💕 Yes is the only way!',
+];
+
+function runAway() {
+  noCount++;
+  const bw = noBtn.offsetWidth;
+  const bh = noBtn.offsetHeight;
+  const margin = 16;
+
+  const maxX = window.innerWidth  - bw  - margin;
+  const maxY = window.innerHeight - bh  - margin;
+
+  const curX = parseFloat(noBtn.style.left) || window.innerWidth/2;
+  const curY = parseFloat(noBtn.style.top)  || window.innerHeight/2;
+
+  let nx, ny, tries = 0;
+  do {
+    nx = margin + Math.random() * (maxX - margin * 2);
+    ny = margin + Math.random() * (maxY - margin * 2);
+    tries++;
+  } while (
+    tries < 40 &&
+    Math.hypot(nx - curX, ny - curY) < 130
+  );
+
+  noBtn.style.left = nx + 'px';
+  noBtn.style.top  = ny + 'px';
+  noBtn.textContent = naughtyMsgs[Math.min(noCount, naughtyMsgs.length - 1)];
+
+  // Show toast for first few attempts
+  if (noCount <= 6) {
+    const toast = document.getElementById('noToast');
+    toast.textContent = toastMsgs[Math.min(noCount - 1, toastMsgs.length - 1)];
+    toast.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => toast.classList.remove('show'), 1800);
+  }
+}
+
+// ── Yes ──
+function sayYes() {
+  document.getElementById('proposeScreen').classList.add('hidden');
+  document.getElementById('yesScreen').classList.remove('hidden');
+  noBtn.style.display = 'none';
+  document.getElementById('noToast').classList.remove('show');
+
+  // Burst hearts everywhere
+  for (let i = 0; i < 30; i++) {
+    setTimeout(() => spawnSparkle(
+      10 + Math.random() * 80 + 'vw',
+      10 + Math.random() * 80 + 'vh',
+      ['💖','💗','💕','🌸','🌹','🎊','✨'][Math.floor(Math.random()*7)],
+      1.1 + Math.random() * 1.5
+    ), i * 60);
+  }
+}
+
+// ── Sparkle on cursor ──
+function spawnSparkle(x, y, emoji = null, size = null) {
+  const el = document.createElement('div');
+  el.className = 'sparkle';
+  el.textContent = emoji || ['💕','💗','✨','🌸','💖'][Math.floor(Math.random()*5)];
+  el.style.left = x;
+  el.style.top  = y;
+  if (size) el.style.fontSize = size + 'rem';
+  document.body.appendChild(el);
+  setTimeout(() => el.remove(), 700);
+}
+
+document.addEventListener('mousemove', (e) => {
+  if (Math.random() > 0.18) return;
+  spawnSparkle(e.clientX + 'px', e.clientY + 'px');
+});
+document.addEventListener('touchmove', (e) => {
+  if (Math.random() > 0.3) return;
+  const t = e.touches[0];
+  spawnSparkle(t.clientX + 'px', t.clientY + 'px');
+}, { passive: true });
+</script>
+</body>
+</html>
